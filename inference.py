@@ -169,7 +169,8 @@ def process_image(img_path):
     print("Inference time = {:.2f}".format(t2 - t1))
 
     img2 = img.resize((500, 500))
-    bbox = output[0], output[1], 0.1, 0.1
+    #bbox = output[0], output[1], 0.1, 0.1
+    bbox = output
     draw_bbox(img2, bbox)
     img2.show()
 
