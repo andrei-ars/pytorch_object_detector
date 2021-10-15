@@ -198,8 +198,8 @@ def process_dir(in_dir, out_dir, model_name="custom"):
         output = inference(model, resized_img)
 
         img2 = img.resize((500, 500))
-        #draw_bbox(img2, output)
-        bbox = output[0], output[1], 0.1, 0.1
+        bbox = output
+        #bbox = output[0], output[1], 0.1, 0.1
         draw_bbox(img2, bbox)
         #img2.show()
         out_path = os.path.join(out_dir, basename)
