@@ -196,14 +196,14 @@ if __name__ == "__main__":
     criterion = bboxes_loss
 
     # Observe that all parameters are being optimized
-    optimizer_ft = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer_ft = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
     #optimizer_ft = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
     # Decay LR by a factor of 0.1 every 7 epochs
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.1)
 
     model = train_model(model, criterion, optimizer_ft, exp_lr_scheduler,
-        num_epochs=8)
+        num_epochs=10)
 
     # save model
     torch.save(model.state_dict(), "model_state.pt")
@@ -283,5 +283,17 @@ Epoch Train Valid
 2: 0.0084 0.0070
 3: 0.0077 0.0076
 4: 0.0076 0.0072
+
+
+Mobile
+Epoch Train Valid
+0: 0.0805 0.0467
+1: 0.0629 0.0344
+2: 0.0390 0.0224
+3: 0.0384 0.0166
+4: 0.0351 0.0152
+5: 0.0357 0.0128
+6: 0.0333 0.0160
+7: 0.0329 0.0146
 
 """
