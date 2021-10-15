@@ -157,7 +157,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             print('{} loss: {:.4f}'.format(phase, epoch_loss))
             history[epoch][phase] = {'loss': epoch_loss}
             if phase == 'valid':
-                l_rate = scheduler.get_lr()
+                l_rate = scheduler.get_last_lr()
                 print("l_rate: {}".format(l_rate))
 
             # deep copy the model
