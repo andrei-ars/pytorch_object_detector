@@ -38,21 +38,26 @@ from data_factory import get_data_transforms
 from accuracy import *
 import settings
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model_name = settings.model_name
 
+
+"""
 if model_name == "resnet":
     model = get_resnet18_classifier(output_size=5)
+elif model_name == "torchvision":
+    model = get_torchvision_model(output_size=5)
 elif model_name == "custom":
     model = CNN_Net(output_size=5, num_input_channels=1)
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
 model_path = "model_state.pt"
 model.load_state_dict(torch.load(model_path))
 model.eval()
+"""
 
-model_full = torch.load("model_full.pt")
+model = torch.load("model_full.pt")
 print("Loading done.")
 
 

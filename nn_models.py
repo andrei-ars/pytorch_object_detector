@@ -7,7 +7,7 @@ from torchvision import models
 
 def get_resnet18_classifier(output_size, pretrained=True):
 
-    #model_ft = models.resnet18(pretrained=pretrained)
+    model_ft = models.resnet18(pretrained=pretrained)
     num_ftrs = model_ft.fc.in_features
     model_ft.fc = nn.Linear(num_ftrs, output_size)
     return model_ft
