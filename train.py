@@ -43,7 +43,7 @@ elif model_name == "custom":
 
 data_parts = ['train', 'valid']
 #batch_size = settings.batch_size
-batch_size = 4
+batch_size = 8
 
 if True:
 
@@ -133,9 +133,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
-                    print("outputs:", outputs)
-                    print("labels:", labels) # labels: tensor([1, 2, 2, 2])
-                    print("loss:", loss) # tensor(1.1003, grad_fn=<NllLossBackward>)
+                    #print("outputs:", outputs)
+                    #print("labels:", labels) # labels: tensor([1, 2, 2, 2])
+                    #print("loss:", loss) # tensor(1.1003, grad_fn=<NllLossBackward>)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     criterion = bboxes_loss
 
     # Observe that all parameters are being optimized
-    optimizer_ft = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
+    optimizer_ft = optim.SGD(model.parameters(), lr=0.002, momentum=0.9)
     #optimizer_ft = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
     # Decay LR by a factor of 0.1 every 7 epochs
