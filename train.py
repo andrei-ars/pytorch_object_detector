@@ -154,8 +154,11 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
             epoch_loss = running_loss / dataset_sizes[phase]
 
-            print('{} Loss: {:.4f}'.format(phase, epoch_loss))
+            print('{} loss: {:.4f}'.format(phase, epoch_loss))
             history[epoch][phase] = {'loss': epoch_loss}
+            if phase == 'valid':
+                l_rate = scheduler.get_lr()
+                print("l_rate: {:.5f}".format(l_rate))
 
             # deep copy the model
             #if phase == 'valid' and epoch_acc > best_acc:
@@ -287,13 +290,9 @@ Epoch Train Valid
 
 Mobile
 Epoch Train Valid
-0: 0.0805 0.0467
-1: 0.0629 0.0344
-2: 0.0390 0.0224
-3: 0.0384 0.0166
-4: 0.0351 0.0152
-5: 0.0357 0.0128
-6: 0.0333 0.0160
-7: 0.0329 0.0146
+17: 0.0403 0.0198
+18: 0.0431 0.0197
+19: 0.0366 0.0196
+
 
 """
