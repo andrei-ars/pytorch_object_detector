@@ -12,7 +12,7 @@ def bboxes_loss(logits, labels):
     size_sq = (sqrt(logits[:,2:4]) - sqrt(labels[:,2:4])) ** 2
     obj_sq = (logits[:,4] - labels[:,4]) ** 2
     #bbox_loss = torch.mean(loc_sq) + 0.1*torch.mean(size_sq) + 0.01 * torch.mean(obj_sq)
-    bbox_loss = torch.mean(loc_sq) + torch.mean(size_sq) + 0.1 * torch.mean(obj_sq)
+    bbox_loss = torch.mean(loc_sq) + 0.1*torch.mean(size_sq) + 0.1 * torch.mean(obj_sq)
 
     #print("loc_sq:", loc_sq)
     #print("size_sq:", size_sq)
