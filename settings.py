@@ -1,8 +1,8 @@
 #export CUDA_VISIBLE_DEVICES=3
 import os
 
-model_name = "custom"
-#model_name = "resnet"
+#model_name = "custom"
+model_name = "resnet"
 
 if model_name == "resnet":
     #data_path = "/storage/work/cv/obj_det/ads_dataset/9_ADS_obj_get_generated"
