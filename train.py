@@ -43,22 +43,28 @@ elif model_name == "custom":
 
 data_parts = ['train', 'valid']
 #batch_size = settings.batch_size
-batch_size = 8
+batch_size = 32
 
 if True:
 
+    #data_path = "/data/5_patexia/3_scanned/6_dataset_v2/7_ADS_obj_det"
+    #data_path = "/data/5_patexia/3_scanned/6_dataset_v2/9_ADS_obj_get_generated"
+    data_path = "/storage/work/cv/obj_det/ads_dataset/9_ADS_obj_get_generated"
+
     train_dataset = ObjDetDataset(
-        images_dir="../dataset/train/", 
-        json_dir="../dataset/json_annotations/train/",
-        #json_dir="/data/5_patexia/32_object_detection/dataset/_small_dataset/train/",
+        #images_dir="../dataset/train/", 
+        #json_dir="../dataset/json_annotations/train/",
+        images_dir=os.path.join(data_path, "train"), 
+        json_dir=os.path.join(data_path, "json_annotations/train"),
         data_type="train", 
         num_colors=num_colors,
         image_width=image_width,
     )
     valid_dataset = ObjDetDataset(
-        images_dir="../dataset/valid/", 
-        json_dir="../dataset/json_annotations/valid/",
-        #json_dir="/data/5_patexia/32_object_detection/dataset/_small_dataset/valid/",
+        #images_dir="../dataset/valid/", 
+        #json_dir="../dataset/json_annotations/valid/",
+        images_dir=os.path.join(data_path, "valid"), 
+        json_dir=os.path.join(data_path, "json_annotations/valid"),
         data_type="valid", 
         num_colors=num_colors,
         image_width=image_width,
@@ -199,15 +205,15 @@ if __name__ == "__main__":
     criterion = bboxes_loss
 
     # Observe that all parameters are being optimized
-    optimizer_ft = optim.SGD(model.parameters(), lr=0.005, momentum=0.9)
     #optimizer_ft = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    optimizer_ft = optim.SGD(model.parameters(), lr=0.002, momentum=0.9)
 
     # Decay LR by a factor of 0.1 every 7 epochs
     #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.1)
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.5)
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=2, gamma=0.5)
 
     model = train_model(model, criterion, optimizer_ft, exp_lr_scheduler,
-        num_epochs=20)
+        num_epochs=1)
 
     # save model
     torch.save(model.state_dict(), "model_state.pt")
@@ -298,5 +304,23 @@ Epoch Train Valid
 17: 0.0149 0.0039
 18: 0.0153 0.0041
 19: 0.0157 0.0041
+
+
+==============
+
+new data
+
+Epoch Train Valid
+0: 0.2733 0.1828
+1: 0.1991 0.3840
+2: 0.1533 0.0404
+18: 0.0362 0.0189
+19: 0.0342 0.0175
+
+0: 1.3119 0.1615
+1: 0.4458 0.5909
+18: 0.0647 0.0036
+19: 0.0645 0.0036
+
 
 """

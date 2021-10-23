@@ -14,7 +14,7 @@ def get_resnet18_classifier(output_size, pretrained=True):
 
 def get_torchvision_model(output_size, pretrained=True):
 
-    model_ft = models.mobilenet_v2(pretrained=True)
+    model_ft = models.mobilenet_v2(pretrained=pretrained)
     num_ftrs = model_ft.classifier[1].in_features
     model_ft.classifier[1] = nn.Linear(num_ftrs, output_size)
     return model_ft
