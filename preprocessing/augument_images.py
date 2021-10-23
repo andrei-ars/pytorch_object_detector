@@ -3,8 +3,8 @@ import os
 import glob
 import random
 import json
-import xmltodict
-from lxml import objectify
+#import xmltodict
+#from lxml import objectify
 from PIL import Image
 
 
