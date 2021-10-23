@@ -37,7 +37,7 @@ model_name = settings.model_name
 num_colors = settings.num_colors
 image_width = settings.image_width
 batch_size = settings.batch_size # = 32
-data_path = settings.batch_size
+data_path = settings.data_path
 data_parts = ['train', 'valid']
 pickle_dataset_path = "dataset_{}.pickle".format(image_width)
 
@@ -327,7 +327,18 @@ Epoch Train Valid
 18: 0.0647 0.0036
 19: 0.0645 0.0036
 
---
+----------
+with augmentation:
+
+custom:
+Epoch 9/9
+----------
+train loss: 0.0398
+valid loss: 0.0352
+ln_rate: [0.0001]
+
+mobile:
+
 Training complete in 32m 37s
 
 Epoch Train Valid
