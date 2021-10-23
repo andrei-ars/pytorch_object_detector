@@ -212,8 +212,8 @@ if __name__ == "__main__":
     model_name = settings.model_name
     #process_dir(in_dir="../test/in/", out_dir="../test/out/", model_name=model_name)
     process_dir(
-        in_dir="/data/5_patexia/3_scanned/6_dataset_v2/7_ADS_obj_det/valid/",
-        out_dir="/data/5_patexia/3_scanned/6_dataset_v2/7_ADS_obj_det/_test_out/",
+        in_dir="/data/5_patexia/32_object_detection/test/in/",
+        out_dir="/data/5_patexia/32_object_detection/test/out/",
         model_name=model_name)
 
     #img_file = '/data/5_patexia/image_classifier/0190_TRNA.png'

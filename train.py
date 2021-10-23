@@ -163,8 +163,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             print('{} loss: {:.4f}'.format(phase, epoch_loss))
             history[epoch][phase] = {'loss': epoch_loss}
             if phase == 'valid':
-                l_rate = scheduler.get_last_lr()
-                print("l_rate: {}".format(l_rate))
+                ln_rate = scheduler.get_last_lr()
+                history[epoch]['ln_rate'] = ln_rate
+                print("ln_rate: {}".format(ln_rate))
 
             # deep copy the model
             #if phase == 'valid' and epoch_acc > best_acc:
@@ -181,11 +182,12 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     # load best model weights
     #model.load_state_dict(best_model_wts)
 
-    print("\nEpoch Train Valid")
+    print("\nEpoch ln_rate train valid")
     for epoch in range(num_epochs):
         train_loss = history[epoch]['train']['loss']
         valid_loss = history[epoch]['valid']['loss']
-        print('{}: {:.4f} {:.4f}'.format(epoch, train_loss, valid_loss))
+        ln_rate = history[epoch]['ln_rate']
+        print('{}: {:5f} | {:.4f} {:.4f}'.format(epoch, ln_rate, train_loss, valid_loss))
 
     return model
 
@@ -206,18 +208,18 @@ if __name__ == "__main__":
 
     # Observe that all parameters are being optimized
     #optimizer_ft = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-    optimizer_ft = optim.SGD(model.parameters(), lr=0.004, momentum=0.9)
+    optimizer_ft = optim.SGD(model.parameters(), lr=0.0032, momentum=0.9)
 
     # Decay LR by a factor of 0.1 every 7 epochs
     #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.1)
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=2, gamma=0.5)
 
     model = train_model(model, criterion, optimizer_ft, exp_lr_scheduler,
-        num_epochs=5)
+        num_epochs=10)
 
     # save model
     torch.save(model.state_dict(), "model_state.pt")
-    torch.save(model, "model_full.pt")
+    torch.save(model, "model_full.pt", _use_new_zipfile_serialization=False)
 
 
 # Results:
@@ -321,6 +323,16 @@ Epoch Train Valid
 1: 0.4458 0.5909
 18: 0.0647 0.0036
 19: 0.0645 0.0036
+
+--
+Training complete in 32m 37s
+
+Epoch Train Valid
+0: 0.1080 0.0357
+1: 0.0334 0.0179
+2: 0.0262 0.0238
+3: 0.0174 0.0098
+4: 0.0168 0.0094
 
 
 """
