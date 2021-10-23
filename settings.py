@@ -5,11 +5,13 @@ import os
 model_name = "resnet"
 
 if model_name == "resnet":
-    num_colors = 3
     image_width = 224
+    num_colors = 3
+    batch_size = 32
 elif model_name == "custom":
-    num_colors = 1
     image_width = 128
+    num_colors = 1
+    batch_size = 8
 
 #data_dir = '../dataset/'
 #batch_size = 4

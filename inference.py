@@ -37,9 +37,12 @@ import data_factory
 from data_factory import get_data_transforms
 from accuracy import *
 import settings
+model_name = settings.model_name
+num_colors = settings.num_colors
+image_width = settings.image_width
+displayed_size = (500, 500)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_name = settings.model_name
 
 
 """
@@ -144,12 +147,6 @@ def draw_bbox(img, bbox):
 
 
 def process_image(img_path):
-    if model_name == "resnet":
-        num_colors = 3
-        image_width = 224
-    elif model_name == "custom":
-        num_colors = 1
-        image_width = 128
 
     #class_name = '31'
     img = Image.open(img_file)
@@ -168,7 +165,7 @@ def process_image(img_path):
     t2 = time.time()
     print("Inference time = {:.2f}".format(t2 - t1))
 
-    img2 = img.resize((500, 500))
+    img2 = img.resize(displayed_size)
     #bbox = output[0], output[1], 0.1, 0.1
     bbox = output
     draw_bbox(img2, bbox)
@@ -177,12 +174,12 @@ def process_image(img_path):
 
 def process_dir(in_dir, out_dir, model_name="custom"):
 
-    if model_name == "resnet":
-        num_colors = 3
-        image_width = 224
-    elif model_name == "custom":
-        num_colors = 1
-        image_width = 128
+    #if model_name == "resnet":
+    #    num_colors = 3
+    #    image_width = 224
+    #elif model_name == "custom":
+    #    num_colors = 1
+    #    image_width = 128
 
     for img_path in glob.glob(os.path.join(in_dir, "*.png")):
         
@@ -197,7 +194,7 @@ def process_dir(in_dir, out_dir, model_name="custom"):
         resized_img = img.resize((image_width, image_width))
         output = inference(model, resized_img)
 
-        img2 = img.resize((500, 500))
+        img2 = img.resize(displayed_size)
         bbox = output
         #bbox = output[0], output[1], 0.1, 0.1
         draw_bbox(img2, bbox)
@@ -210,11 +207,11 @@ def process_dir(in_dir, out_dir, model_name="custom"):
 if __name__ == "__main__":
 
     model_name = settings.model_name
-    #process_dir(in_dir="../test/in/", out_dir="../test/out/", model_name=model_name)
-    process_dir(
-        in_dir="/data/5_patexia/32_object_detection/test/in/",
-        out_dir="/data/5_patexia/32_object_detection/test/out/",
-        model_name=model_name)
+    process_dir(in_dir="../test/in/", out_dir="../test/out/")
+    
+    #process_dir(
+    #    in_dir="/data/5_patexia/32_object_detection/test/in/",
+    #    out_dir="/data/5_patexia/32_object_detection/test/out/")
 
     #img_file = '/data/5_patexia/image_classifier/0190_TRNA.png'
     #img_file = '/data/5_patexia/image_classifier/INTV.png'

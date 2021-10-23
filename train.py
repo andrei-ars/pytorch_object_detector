@@ -24,6 +24,7 @@ import os
 import sys
 import copy
 import progressbar
+import pickle
 from nn_models import get_torchvision_model, get_resnet18_classifier
 from nn_models import CNN_Net
 import data_factory
@@ -33,23 +34,20 @@ SHOW_BAR = False
 
 import settings
 model_name = settings.model_name
-
-if model_name == "resnet":
-    num_colors = 3
-    image_width = 224
-elif model_name == "custom":
-    num_colors = 1
-    image_width = 128
-
+num_colors = settings.num_colors
+image_width = settings.image_width
+batch_size = settings.batch_size # = 32
 data_parts = ['train', 'valid']
-#batch_size = settings.batch_size
-batch_size = 20
+pickle_dataset_path = "dataset_{}.pickle".format(image_width)
 
-if True:
-
+if os.path.exists(pickle_dataset_path):
+    with open(pickle_dataset_path, 'rb') as fp:
+        dataset = pickle.load(fp)
+        print("Dataset has been loaded succesfully from {}".format(pickle_dataset_path))
+else:
     #data_path = "/data/5_patexia/3_scanned/6_dataset_v2/7_ADS_obj_det"
-    #data_path = "/data/5_patexia/3_scanned/6_dataset_v2/9_ADS_obj_get_generated"
-    data_path = "/storage/work/cv/obj_det/ads_dataset/9_ADS_obj_get_generated"
+    data_path = "/data/5_patexia/3_scanned/6_dataset_v2/9_ADS_obj_get_generated"
+    #data_path = "/storage/work/cv/obj_det/ads_dataset/9_ADS_obj_get_generated"
 
     train_dataset = ObjDetDataset(
         #images_dir="../dataset/train/", 
@@ -70,18 +68,22 @@ if True:
         image_width=image_width,
     )
     dataset = {'train': train_dataset, 'valid': valid_dataset}
-    dataset_sizes = {'train': len(dataset['train']), 'valid': len(dataset['valid']) }
 
-    num_batch = dict()
-    num_batch['train'] = math.ceil(dataset_sizes['train'] / batch_size)
-    num_batch['valid'] = math.ceil(dataset_sizes['valid'] / batch_size)
-    print('train_num_batch:', num_batch['train'])
-    print('valid_num_batch:', num_batch['valid'])
+    with open(pickle_dataset_path, 'wb') as fp:
+        pickle.dump(dataset, fp)
+        print("Dataset has been saved in {}".format(pickle_dataset_path))
 
-    dataloaders = {
-        'train': DataLoader(dataset['train'], batch_size=batch_size, shuffle=True),
-        'valid': DataLoader(dataset['valid'], batch_size=batch_size, shuffle=True)
-    }
+
+dataset_sizes = {'train': len(dataset['train']), 'valid': len(dataset['valid']) }
+num_batch = dict()
+num_batch['train'] = math.ceil(dataset_sizes['train'] / batch_size)
+num_batch['valid'] = math.ceil(dataset_sizes['valid'] / batch_size)
+print('train_num_batch:', num_batch['train'])
+print('valid_num_batch:', num_batch['valid'])
+dataloaders = {
+    'train': DataLoader(dataset['train'], batch_size=batch_size, shuffle=True),
+    'valid': DataLoader(dataset['valid'], batch_size=batch_size, shuffle=True)
+}
 
 
 #print(data_parts)
@@ -187,7 +189,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         train_loss = history[epoch]['train']['loss']
         valid_loss = history[epoch]['valid']['loss']
         ln_rate = history[epoch]['ln_rate']
-        print('{}: {:5f} | {:.4f} {:.4f}'.format(epoch, ln_rate, train_loss, valid_loss))
+        print('{}: {} | {:.4f} {:.4f}'.format(epoch, ln_rate, train_loss, valid_loss))
 
     return model
 
@@ -195,8 +197,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 if __name__ == "__main__":
 
     if model_name == "resnet":
-        #model = get_resnet18_classifier(output_size=5, pretrained=False)
-        model = get_torchvision_model(output_size=5, pretrained=True)
+        model = get_resnet18_classifier(output_size=5, pretrained=False)
+        #model = get_torchvision_model(output_size=5, pretrained=True)
     elif model_name == "custom":
         model = CNN_Net(output_size=5, num_input_channels=1)
 
@@ -208,7 +210,7 @@ if __name__ == "__main__":
 
     # Observe that all parameters are being optimized
     #optimizer_ft = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-    optimizer_ft = optim.SGD(model.parameters(), lr=0.0032, momentum=0.9)
+    optimizer_ft = optim.SGD(model.parameters(), lr=0.00128, momentum=0.9)
 
     # Decay LR by a factor of 0.1 every 7 epochs
     #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.1)
