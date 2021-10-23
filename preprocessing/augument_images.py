@@ -8,7 +8,7 @@ import json
 from PIL import Image
 
 
-def augument_images(im_indir, bg_indir, im_outdir, json_outdir):
+def augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=1):
 
     os.system("mkdir -p {}".format(im_outdir))
     os.system("mkdir -p {}".format(json_outdir))
@@ -25,8 +25,6 @@ def augument_images(im_indir, bg_indir, im_outdir, json_outdir):
     crop_images = []
     for path in crop_im_paths:
         crop_images.append(Image.open(path))
-
-    repeat_times = 3
     
     for bg_path in bg_im_paths:
         bg_image = Image.open(bg_path)
@@ -78,8 +76,8 @@ def augument_images(im_indir, bg_indir, im_outdir, json_outdir):
 if __name__ == "__main__":
 
     #for mode in ["train",]:
-    #data_path = "/data/5_patexia/3_scanned/6_dataset_v2"
-    data_path = "/storage/work/cv/obj_det/ads_dataset"
+    data_path = "/data/5_patexia/3_scanned/6_dataset_v2"
+    #data_path = "/storage/work/cv/obj_det/ads_dataset"
 
     in_dir = "8_ADS_obj_det_small"
     out_dir = "9_ADS_obj_get_generated"
@@ -88,14 +86,17 @@ if __name__ == "__main__":
     os.system("mkdir -p {}".format(os.path.join(data_path, out_dir, "json_annotations")))
 
     for subdir in ['train', 'valid', 'json_annotations']:
-        in_path = os.path.join(data_path, in_dir, subdir)
-        out_path = os.path.join(data_path, out_dir, subdir)
-        os.system("cp {} {}")
+        src_path = os.path.join(data_path, in_dir, subdir)
+        dst_path = os.path.join(data_path, out_dir)
+        cmd = "cp -r {} {}".format(src_path, dst_path)
+        os.system(cmd)
+        print(cmd)
 
     bg_indir = os.path.join(data_path, "4_ADS_marked_by_me/train/0_no_info")
     im_indir = os.path.join(data_path, "8_ADS_obj_det_small/crop_bbox/train")
     im_outdir = os.path.join(data_path, out_dir, "train")
     json_outdir = os.path.join(data_path, out_dir, "json_annotations/train")
-    augument_images(im_indir, bg_indir, im_outdir, json_outdir)
+
+    augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=1)
 
 

@@ -44,7 +44,7 @@ pickle_dataset_path = "dataset_{}.pickle".format(image_width)
 
 #start_lr = 0.00128
 start_lr = 0.00256
-step_size = 5
+step_size = 8
 num_epochs = 25
 
 
