@@ -37,6 +37,7 @@ model_name = settings.model_name
 num_colors = settings.num_colors
 image_width = settings.image_width
 batch_size = settings.batch_size # = 32
+data_path = settings.batch_size
 data_parts = ['train', 'valid']
 pickle_dataset_path = "dataset_{}.pickle".format(image_width)
 
@@ -46,10 +47,11 @@ if os.path.exists(pickle_dataset_path):
         print("Dataset has been loaded succesfully from {}".format(pickle_dataset_path))
 else:
     #data_path = "/data/5_patexia/3_scanned/6_dataset_v2/7_ADS_obj_det"
-    data_path = "/data/5_patexia/3_scanned/6_dataset_v2/9_ADS_obj_get_generated"
+    #data_path = "/data/5_patexia/3_scanned/6_dataset_v2/9_ADS_obj_get_generated"
     #data_path = "/storage/work/cv/obj_det/ads_dataset/9_ADS_obj_get_generated"
 
-    train_dataset = ObjDetDataset(
+    dataset = {}
+    dataset['train'] = ObjDetDataset(
         #images_dir="../dataset/train/", 
         #json_dir="../dataset/json_annotations/train/",
         images_dir=os.path.join(data_path, "train"), 
@@ -58,7 +60,7 @@ else:
         num_colors=num_colors,
         image_width=image_width,
     )
-    valid_dataset = ObjDetDataset(
+    dataset['valid'] = ObjDetDataset(
         #images_dir="../dataset/valid/", 
         #json_dir="../dataset/json_annotations/valid/",
         images_dir=os.path.join(data_path, "valid"), 
@@ -67,7 +69,6 @@ else:
         num_colors=num_colors,
         image_width=image_width,
     )
-    dataset = {'train': train_dataset, 'valid': valid_dataset}
 
     with open(pickle_dataset_path, 'wb') as fp:
         pickle.dump(dataset, fp)
