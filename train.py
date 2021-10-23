@@ -153,9 +153,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
-                    print("outputs:", outputs)
-                    print("labels:", labels) # labels: tensor([1, 2, 2, 2])
-                    print("loss:", loss) # tensor(1.1003, grad_fn=<NllLossBackward>)
+                    #print("outputs:", outputs)
+                    #print("labels:", labels) # labels: tensor([1, 2, 2, 2])
+                    #print("loss:", loss) # tensor(1.1003, grad_fn=<NllLossBackward>)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
