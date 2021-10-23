@@ -209,8 +209,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 if __name__ == "__main__":
 
     if model_name == "resnet":
-        model = get_resnet18_classifier(output_size=5, pretrained=False)
-        #model = get_torchvision_model(output_size=5, pretrained=True)
+        #model = get_resnet18_classifier(output_size=5, pretrained=False)
+        model = get_torchvision_model(output_size=5, pretrained=True)
     elif model_name == "custom":
         model = CNN_Net(output_size=5, num_input_channels=1)
 
