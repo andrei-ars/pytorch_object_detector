@@ -215,7 +215,7 @@ if __name__ == "__main__":
 
     # Decay LR by a factor of 0.1 every 7 epochs
     #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.1)
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.5)
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.5)
 
     model = train_model(model, criterion, optimizer_ft, exp_lr_scheduler,
         num_epochs=20)
