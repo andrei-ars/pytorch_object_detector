@@ -218,7 +218,7 @@ if __name__ == "__main__":
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=2, gamma=0.5)
 
     model = train_model(model, criterion, optimizer_ft, exp_lr_scheduler,
-        num_epochs=10)
+        num_epochs=20)
 
     # save model
     torch.save(model.state_dict(), "model_state.pt")
@@ -329,7 +329,6 @@ Epoch Train Valid
 
 ----------
 with augmentation:
-
 custom:
 Epoch 9/9
 ----------
