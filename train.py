@@ -206,14 +206,14 @@ if __name__ == "__main__":
 
     # Observe that all parameters are being optimized
     #optimizer_ft = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-    optimizer_ft = optim.SGD(model.parameters(), lr=0.002, momentum=0.9)
+    optimizer_ft = optim.SGD(model.parameters(), lr=0.004, momentum=0.9)
 
     # Decay LR by a factor of 0.1 every 7 epochs
     #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.1)
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=2, gamma=0.5)
 
     model = train_model(model, criterion, optimizer_ft, exp_lr_scheduler,
-        num_epochs=1)
+        num_epochs=5)
 
     # save model
     torch.save(model.state_dict(), "model_state.pt")
