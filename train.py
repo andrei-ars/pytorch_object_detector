@@ -41,6 +41,13 @@ data_path = settings.data_path
 data_parts = ['train', 'valid']
 pickle_dataset_path = "dataset_{}.pickle".format(image_width)
 
+
+start_lr = 0.00128
+step_size = 5
+num_epochs = 30
+
+
+
 if os.path.exists(pickle_dataset_path):
     with open(pickle_dataset_path, 'rb') as fp:
         dataset = pickle.load(fp)
@@ -211,14 +218,14 @@ if __name__ == "__main__":
 
     # Observe that all parameters are being optimized
     #optimizer_ft = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-    optimizer_ft = optim.SGD(model.parameters(), lr=0.00128, momentum=0.9)
+    optimizer_ft = optim.SGD(model.parameters(), lr=start_lr, momentum=0.9)
 
     # Decay LR by a factor of 0.1 every 7 epochs
     #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=3, gamma=0.1)
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.5)
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=step_size, gamma=0.5)
 
     model = train_model(model, criterion, optimizer_ft, exp_lr_scheduler,
-        num_epochs=20)
+        num_epochs=num_epochs)
 
     # save model
     torch.save(model.state_dict(), "model_state.pt")
