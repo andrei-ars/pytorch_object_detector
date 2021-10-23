@@ -43,7 +43,7 @@ elif model_name == "custom":
 
 data_parts = ['train', 'valid']
 #batch_size = settings.batch_size
-batch_size = 32
+batch_size = 20
 
 if True:
 
