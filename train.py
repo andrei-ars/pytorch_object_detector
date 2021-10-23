@@ -45,7 +45,8 @@ pickle_dataset_path = "dataset_{}.pickle".format(image_width)
 #start_lr = 0.00128
 num_epochs = 25; #start_lr = 0.00256; step_size = 8
 #num_epochs = 25; start_lr = 0.00256; step_size = 4
-num_epochs = 25; start_lr = 0.00128; step_size = 5
+#num_epochs = 25; start_lr = 0.00128; step_size = 5
+num_epochs = 25; start_lr = 0.0001; step_size = 5
 
 
 
@@ -78,10 +79,12 @@ else:
         image_width=image_width,
     )
 
-    with open(pickle_dataset_path, 'wb') as fp:
-        pickle.dump(dataset, fp)
-        print("Dataset has been saved in {}".format(pickle_dataset_path))
-
+    if len(dataset['train']) > 0 and len(dataset['valid']) > 0:
+        with open(pickle_dataset_path, 'wb') as fp:
+            pickle.dump(dataset, fp)
+            print("Dataset has been saved in {}".format(pickle_dataset_path))
+    else:
+        raise Exception("Dataset is empty.")
 
 dataset_sizes = {'train': len(dataset['train']), 'valid': len(dataset['valid']) }
 num_batch = dict()
@@ -150,9 +153,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
-                    #print("outputs:", outputs)
-                    #print("labels:", labels) # labels: tensor([1, 2, 2, 2])
-                    #print("loss:", loss) # tensor(1.1003, grad_fn=<NllLossBackward>)
+                    print("outputs:", outputs)
+                    print("labels:", labels) # labels: tensor([1, 2, 2, 2])
+                    print("loss:", loss) # tensor(1.1003, grad_fn=<NllLossBackward>)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
