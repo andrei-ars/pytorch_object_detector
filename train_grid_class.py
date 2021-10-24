@@ -48,7 +48,7 @@ y_grid = 20
 #num_epochs = 150; start_lr = 0.00256; step_size = 20
 #num_epochs = 25; start_lr = 0.00256; step_size = 4
 #num_epochs = 25; start_lr = 0.00128; step_size = 5
-num_epochs = 10; start_lr = 0.00256; step_size = 3
+num_epochs = 20; start_lr = 0.00512; step_size = 6
 
 
 
