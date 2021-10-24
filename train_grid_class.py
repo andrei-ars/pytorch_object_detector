@@ -241,8 +241,8 @@ if __name__ == "__main__":
         raise Exception("Bad dataset_type")
 
     if model_name == "resnet":
-        #model = get_resnet18_classifier(output_size=output_size, pretrained=False)
-        model = get_torchvision_model(output_size=output_size, pretrained=True)
+        model = get_resnet18_classifier(output_size=output_size, pretrained=False)
+        #model = get_torchvision_model(output_size=output_size, pretrained=True)
     elif model_name == "custom":
         model = CNN_Net(output_size=output_size, num_input_channels=1)
 

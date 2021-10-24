@@ -3,6 +3,8 @@
 """
 First run split_dataset.py to split dataset in train|valid|test parts.
 Then run this script.
+
+scp -i ~/.ssh/id_rsa -r andrei@35.224.232.253:/storage/work/cv/obj_det/test/out /ram/tmp/
 """
 
 from __future__ import print_function, division
