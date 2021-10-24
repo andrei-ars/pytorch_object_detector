@@ -119,8 +119,10 @@ def imshow(inp, title=None):
 def get_bbox(coords, label, img_data):
 
     map_label_id = {"w": 1, "t": 1, "o": 1, "a": 1, "n": 0,}
+
     W = img_data['width']
     H = img_data['height']
+
     xn = (coords['x'] / W) - 0.5
     yn = (coords['y'] / H) - 0.5
     w = coords['width'] / W
@@ -129,34 +131,11 @@ def get_bbox(coords, label, img_data):
     return bbox
 
 
-def get_one_hot_class_label(coords, label, img_data, y_grid):
-
-    S = y_grid
-    map_label_id = {"w": 1, "t": 1, "o": 1, "a": 1, "n": 0,}
-
-    W = img_data['width']
-    H = img_data['height']
-    x = coords['x']
-    y = coords['y']
-    w = coords['width']
-    h = coords['height']
-    #print("W={}, H={}, x={}, y={}".format(W,H,x,y))
-    grid_class = int( y*S / H )
-    print("grid_class:", grid_class)
-    one_hot_label = [0] * S
-    one_hot_label[grid_class] = 1
-    #print("one_hot_label:", one_hot_label)
-    return grid_class
-
-
 class ObjDetDataset(Dataset):
   
   def __init__(self, images_dir, json_dir=None, data_type="train", num_colors=3,
-                        image_width=224, dataset_type="obj_det", y_grid=20):
+                        image_width=224):
         # Initialization
-
-    #dataset_type = "obj_det"
-    #dataset_type = "grid_class"
 
     #transform = data_transforms['train']
     transform = get_data_transforms(image_width)['train']
@@ -195,24 +174,16 @@ class ObjDetDataset(Dataset):
                     #coord = ann["coordinates"]
                     #bbox = (coord['x'], coord['y'], coord['width'], coord['height'], map_label_id[label])
                     #bbox = torch.tensor(bbox)
-                    if dataset_type == "obj_det":
-                        bbox = get_bbox(ann["coordinates"], ann["label"], img_data)
-                        label_tensor = torch.tensor(bbox)
-                    elif dataset_type == "grid_class":
-                        class_label = get_one_hot_class_label(
-                            ann["coordinates"], ann["label"], img_data, y_grid=y_grid)
-                        label_tensor = torch.tensor(class_label)
-                    self.data.append( (img_tensor, label_tensor) )
+                    bbox = get_bbox(ann["coordinates"], ann["label"], img_data)
+                    bbox = torch.tensor(bbox)
+                    self.data.append( (img_tensor, bbox) )
                     #print((img, bbox))
             else:
                 #bbox = (coord['x'], coord['y'], coord['width'], coord['height'], map_label_id[label])
                 #bbox = torch.tensor(bbox)
                 #bbox = get_bbox((), ann["label"], img_data)
-                if dataset_type == "obj_det":
-                    label_tensor = torch.tensor( (0.5, 0.5, 0.5, 0.5, 0) )
-                elif dataset_type == "grid_class":
-                    label_tensor = torch.tensor(0)
-                self.data.append( (img_tensor, label_tensor) )
+                bbox = torch.tensor( (0.5, 0.5, 0.5, 0.5, 0) )
+                self.data.append( (img_tensor, bbox) )
                 #print((img, bbox))
 
         #self.labels = labels
@@ -251,24 +222,11 @@ if __name__ == '__main__':
         plt.pause(2)  # pause a bit so that plots are updated
     """
 
-    #train_dataset = ObjDetDataset(
-    #    images_dir="/data/tools/dataset/train/", 
-    #    json_dir="/data/tools/dataset/json_annotations/train/"
-    #    )
+    train_dataset = ObjDetDataset(
+        images_dir="/data/tools/dataset/train/", 
+        json_dir="/data/tools/dataset/json_annotations/train/"
+        )
 
-    data_path = settings.data_path
-    dataset = ObjDetDataset(
-        #images_dir="../dataset/train/", 
-        #json_dir="../dataset/json_annotations/train/",
-        images_dir=os.path.join(settings.data_path, "valid"), 
-        json_dir=os.path.join(settings.data_path, "json_annotations/valid"),
-        data_type="valid", 
-        num_colors=settings.num_colors,
-        image_width=settings.image_width,
-        dataset_type = "grid_class",
-        y_grid=20
-    )    
-
-    print("len(dataset):", len(dataset))
-    print(dataset[0])
-    print(dataset[1])
+    print()
+    print(train_dataset[0])
+    print(train_dataset[1])
