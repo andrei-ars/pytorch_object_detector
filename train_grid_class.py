@@ -48,8 +48,8 @@ y_grid = 20
 #num_epochs = 150; start_lr = 0.00256; step_size = 20
 #num_epochs = 25; start_lr = 0.00256; step_size = 4
 #num_epochs = 25; start_lr = 0.00128; step_size = 5
-num_epochs = 20; start_lr = 0.00512; step_size = 6
-
+#num_epochs = 20; start_lr = 0.00512; step_size = 6
+num_epochs = 10; start_lr = 0.00512; step_size = 3
 
 
 
@@ -167,10 +167,10 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                         loss.backward()
                         optimizer.step()
 
-                # statistics for classification
-                print('preds: ', preds)
-                print('labels:', labels.data) # labels.data
-                print('match: ', int(torch.sum(preds == labels.data)))
+                # show model prediction for classification
+                #print('preds: ', preds)
+                #print('labels:', labels.data) # labels.data
+                #print('match: ', int(torch.sum(preds == labels.data)))
 
                 running_loss += loss.item() * inputs.size(0)
                 if dataset_type == "grid_class":
