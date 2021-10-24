@@ -97,6 +97,6 @@ if __name__ == "__main__":
     im_outdir = os.path.join(data_path, out_dir, "train")
     json_outdir = os.path.join(data_path, out_dir, "json_annotations/train")
 
-    augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=1)
+    augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=3)
 
 

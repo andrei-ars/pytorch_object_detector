@@ -42,7 +42,7 @@ data_parts = ['train', 'valid']
 pickle_dataset_path = "dataset_{}.pickle".format(image_width)
 
 dataset_type = "grid_class"
-y_grid = 20
+y_grid = 30
 
 #start_lr = 0.00128
 #num_epochs = 150; start_lr = 0.00256; step_size = 20
