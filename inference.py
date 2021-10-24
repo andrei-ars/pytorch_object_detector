@@ -147,7 +147,7 @@ def draw_bbox(img, bbox):
 
 
 def draw_grid(img, output):
-    k = output # class
+    k = np.argmax(output) # class
     W, H = img.size
     x0 = 5
     x1 = W - 5
