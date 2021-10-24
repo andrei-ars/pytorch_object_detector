@@ -142,7 +142,20 @@ def draw_bbox(img, bbox):
 
     draw = ImageDraw.Draw(img)
     #draw.rectangle((100, 100, 200, 200), None, "#f00", width=3)
-    draw.rectangle((x0, y0, x1, y1), None, "#f00", width=3)
+    draw.rectangle((x0, y0, x1, y1), None, "#0f0", width=3)
+    return img
+
+
+def draw_grid(img, output):
+    k = output # class
+    W, H = img.size
+    x0 = 5
+    x1 = W - 5
+    S = 20
+    y0 = int(k * H / S)
+    y1 = int((k+1) * H / S)
+    draw = ImageDraw.Draw(img)
+    draw.rectangle((x0, y0, x1, y1), None, "#0f0", width=3)
     return img
 
 
@@ -193,11 +206,13 @@ def process_dir(in_dir, out_dir, model_name="custom"):
             
         resized_img = img.resize((image_width, image_width))
         output = inference(model, resized_img)
+        print("nn output:", output)
 
         img2 = img.resize(displayed_size)
-        bbox = output
         #bbox = output[0], output[1], 0.1, 0.1
-        draw_bbox(img2, bbox)
+        #draw_bbox(img2, bbox=output)
+        draw_grid(img2, output)
+
         #img2.show()
         out_path = os.path.join(out_dir, basename)
         img2.save(out_path)
