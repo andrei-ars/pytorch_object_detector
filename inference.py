@@ -262,7 +262,7 @@ def process_dir(in_dir, out_dir, model_name="custom"):
         print("Imaged is saved to {}".format(im_out_path))
 
         if do_ocr:
-            with open(text_out_path) as fp:
+            with open(text_out_path, "wt") as fp:
                 fp.write("{}\n".format(result['text']))
 
 if __name__ == "__main__":
