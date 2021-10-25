@@ -130,6 +130,32 @@ def model_testing(model, src_dir):
     return np.mean(res1_list), np.mean(res6_list)
 
 
+def process_and_show_image(img_path):
+
+    #class_name = '31'
+    img = Image.open(img_file)
+
+    if num_colors == 3:
+        rgb_img = Image.new("RGB", img.size)
+        rgb_img.paste(img)
+        img = rgb_img
+    
+    t1 = time.time()
+    #resized_img = rgb_img.resize((image_width, image_width))
+    resized_img = img.resize((image_width, image_width))
+    
+    output = inference(model, resized_img)
+    print("output:", output)
+    t2 = time.time()
+    print("Inference time = {:.2f}".format(t2 - t1))
+
+    img2 = img.resize(displayed_size)
+    #bbox = output[0], output[1], 0.1, 0.1
+    bbox = output
+    draw_bbox(img2, bbox)
+    img2.show()
+
+
 def draw_bbox(img, bbox):
     W, H = img.size
     #print(W, H)
@@ -156,35 +182,16 @@ def draw_grid(img, output, y_grid):
     x1 = W - 5
     y0 = int(k * H / S)
     y1 = int((k+1) * H / S)
+
+    reserv = (y1 - y0) // 2
+    crop_img = img.crop((x0, y0 - reserv, x1, y1 + reserv))
+
     draw = ImageDraw.Draw(img)
     draw.rectangle((x0, y0, x1, y1), None, "#0f0", width=3)
-    return img
-
-
-def process_image(img_path):
-
-    #class_name = '31'
-    img = Image.open(img_file)
-
-    if num_colors == 3:
-        rgb_img = Image.new("RGB", img.size)
-        rgb_img.paste(img)
-        img = rgb_img
     
-    t1 = time.time()
-    #resized_img = rgb_img.resize((image_width, image_width))
-    resized_img = img.resize((image_width, image_width))
-    
-    output = inference(model, resized_img)
-    print("output:", output)
-    t2 = time.time()
-    print("Inference time = {:.2f}".format(t2 - t1))
+    return crop_img
 
-    img2 = img.resize(displayed_size)
-    #bbox = output[0], output[1], 0.1, 0.1
-    bbox = output
-    draw_bbox(img2, bbox)
-    img2.show()
+
 
 
 def process_dir(in_dir, out_dir, model_name="custom"):
@@ -199,25 +206,28 @@ def process_dir(in_dir, out_dir, model_name="custom"):
     for img_path in glob.glob(os.path.join(in_dir, "*.png")):
         
         basename = os.path.basename(img_path)
+        out_path = os.path.join(out_dir, basename)
         img = Image.open(img_path)
-        
+
         if num_colors == 3:
             rgb_img = Image.new("RGB", img.size)
             rgb_img.paste(img)
             img = rgb_img
             
-        resized_img = img.resize((image_width, image_width))
-        output = inference(model, resized_img)
+        input_img = img.resize((image_width, image_width))
+        output = inference(model, input_img)
         print("nn output:", output)
 
-        img2 = img.resize(displayed_size)
+        resized_img = img.resize(displayed_size)
         #bbox = output[0], output[1], 0.1, 0.1
         #draw_bbox(img2, bbox=output)
-        draw_grid(img2, output, y_grid=30)
+        #crop_img = draw_grid(resized_img, output, y_grid=30)
+        #resized_img.save(out_path)
+
+        crop_img = draw_grid(img, output, y_grid=30)
+        crop_img.save(out_path)
 
         #img2.show()
-        out_path = os.path.join(out_dir, basename)
-        img2.save(out_path)
         print("Saved to {}".format(out_path))
 
 
