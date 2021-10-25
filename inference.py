@@ -38,6 +38,7 @@ from nn_models import CNN_Net
 import data_factory
 from data_factory import get_data_transforms
 from accuracy import *
+from ner.mathfunctions import softmax_probabilities
 import settings
 model_name = settings.model_name
 num_colors = settings.num_colors
@@ -174,7 +175,7 @@ def draw_bbox(img, bbox):
     return img
 
 
-def draw_grid(img, output, y_grid):
+def draw_grid_and_return_crop(img, output, y_grid):
     S = y_grid
     k = np.argmax(output) # class
     W, H = img.size
@@ -192,6 +193,32 @@ def draw_grid(img, output, y_grid):
     return crop_img
 
 
+def extract_crop_and_text(img, nn_output, do_ocr=True, y_grid=30):
+
+    S = y_grid
+    k = np.argmax(nn_output) # class
+    ps = softmax_probabilities(nn_output)
+    confidence = np.max(ps) # or ps[k]
+    print("confidence:", confidence)
+
+    W, H = img.size
+    x0 = 5
+    x1 = W - 5
+    y0 = int(k * H / S)
+    y1 = int((k+1) * H / S)
+
+    reserv = (y1 - y0) // 2
+    crop_img = img.crop((x0, y0 - reserv, x1, y1 + reserv))
+
+    draw = ImageDraw.Draw(img)
+    draw.rectangle((x0, y0, x1, y1), None, "#0f0", width=3)
+    
+    if do_ocr:
+        import pytesseract
+        custom_config = "--oem 3 --psm 6"
+        text = pytesseract.image_to_string(crop_img, lang='eng', config=custom_config)
+
+    return {'image':img, 'crop': crop_img, "text": text}
 
 
 def process_dir(in_dir, out_dir, model_name="custom"):
@@ -206,7 +233,9 @@ def process_dir(in_dir, out_dir, model_name="custom"):
     for img_path in glob.glob(os.path.join(in_dir, "*.png")):
         
         basename = os.path.basename(img_path)
-        out_path = os.path.join(out_dir, basename)
+        im_out_path = os.path.join(out_dir, basename)
+        text_out_path = os.path.join(out_dir, os.path.splitext(basename)[0] + ".txt")
+
         img = Image.open(img_path)
 
         if num_colors == 3:
@@ -215,8 +244,8 @@ def process_dir(in_dir, out_dir, model_name="custom"):
             img = rgb_img
             
         input_img = img.resize((image_width, image_width))
-        output = inference(model, input_img)
-        print("nn output:", output)
+        nn_output = inference(model, input_img)
+        print("nn output:", nn_output)
 
         resized_img = img.resize(displayed_size)
         #bbox = output[0], output[1], 0.1, 0.1
@@ -224,12 +253,17 @@ def process_dir(in_dir, out_dir, model_name="custom"):
         #crop_img = draw_grid(resized_img, output, y_grid=30)
         #resized_img.save(out_path)
 
-        crop_img = draw_grid(img, output, y_grid=30)
-        crop_img.save(out_path)
-
+        do_ocr = True
+        y_grid = 30
+        #crop_img = draw_grid_and_return_crop(img, nn_output, do_ocr=do_ocr, y_grid=y_grid)
+        result = extract_crop_and_text(img, nn_output, do_ocr=do_ocr, y_grid=y_grid)
+        result['crop'].save(im_out_path)
         #img2.show()
-        print("Saved to {}".format(out_path))
+        print("Imaged is saved to {}".format(im_out_path))
 
+        if do_ocr:
+            with open(text_out_path) as fp:
+                fp.write("{}\n".format(result['text']))
 
 if __name__ == "__main__":
 
