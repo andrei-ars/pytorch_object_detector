@@ -218,7 +218,7 @@ def extract_crop_and_text(img, nn_output, do_ocr=True, y_grid=30):
         custom_config = "--oem 3 --psm 6"
         text = pytesseract.image_to_string(crop_img, lang='eng', config=custom_config)
 
-    return {'image':img, 'crop': crop_img, "text": text}
+    return {'image':img, 'crop': crop_img, "text": text, "confidence": confidence}
 
 
 def process_dir(in_dir, out_dir, model_name="custom"):
@@ -263,7 +263,7 @@ def process_dir(in_dir, out_dir, model_name="custom"):
 
         if do_ocr:
             with open(text_out_path, "wt") as fp:
-                fp.write("{}\n".format(result['text']))
+                fp.write("confidence={:4f};\n\n{}\n".format(result['confidence'], result['text']))
 
 if __name__ == "__main__":
 
