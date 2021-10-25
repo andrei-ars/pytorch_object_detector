@@ -273,7 +273,9 @@ def process_dir(in_dir, out_dir, model_name="custom"):
 if __name__ == "__main__":
 
     model_name = settings.model_name
-    process_dir(in_dir="../test/in/", out_dir="../test/out/")
+    #process_dir(in_dir="../test/in/", out_dir="../test/out/")
+    process_dir(in_dir="../test/valid_in/", out_dir="../test/valid_out/")
+    
     
     #process_dir(
     #    in_dir="/data/5_patexia/32_object_detection/test/in/",
