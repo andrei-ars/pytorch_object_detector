@@ -5,8 +5,8 @@ model_name = "resnet"
 #model_name = "custom"
 
 if model_name == "resnet":
-    data_path = "/storage/work/cv/obj_det/ads_dataset/9_ADS_obj_get_generated"
-    #data_path = "/storage/work/cv/obj_det/ads_dataset/8_ADS_obj_det_small"
+    #data_path = "/storage/work/cv/obj_det/ads_dataset/9_ADS_obj_get_generated"
+    data_path = "/storage/work/cv/obj_det/ads_dataset/8_ADS_obj_det_small"
     image_width = 224
     num_colors = 3
     batch_size = 32
