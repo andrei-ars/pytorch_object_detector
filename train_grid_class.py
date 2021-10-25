@@ -39,10 +39,12 @@ image_width = settings.image_width
 batch_size = settings.batch_size # = 32
 data_path = settings.data_path
 data_parts = ['train', 'valid']
-pickle_dataset_path = "dataset_{}.pickle".format(image_width)
 
 dataset_type = "grid_class"
 y_grid = 30
+
+pickle_dataset_path = "dataset_{}_{}_{}.pickle".format(image_width, dataset_type, y_grid)
+
 
 #start_lr = 0.00128
 #num_epochs = 150; start_lr = 0.00256; step_size = 20
