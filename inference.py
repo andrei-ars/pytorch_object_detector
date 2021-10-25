@@ -38,7 +38,7 @@ from nn_models import CNN_Net
 import data_factory
 from data_factory import get_data_transforms
 from accuracy import *
-from ner.mathfunctions import softmax_probabilities
+from mathfunctions import softmax_probabilities
 import settings
 model_name = settings.model_name
 num_colors = settings.num_colors
