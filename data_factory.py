@@ -50,7 +50,7 @@ def get_data_transforms(image_width):
             #transforms.CenterCrop(IMAGE_WIDTH),
 
             transforms.Resize(resize_im),
-            №transforms.ColorJitter(0.1, 0.1, 0, 0),
+            transforms.ColorJitter(0.1, 0.1, 0, 0),
 
             transforms.ToTensor(),
             #ts.transforms.Rotate(20), # data augmentation: rotation 
