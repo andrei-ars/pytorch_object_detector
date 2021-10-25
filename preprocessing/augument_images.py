@@ -6,6 +6,7 @@ import json
 #import xmltodict
 #from lxml import objectify
 from PIL import Image
+from PIL import ImageOps, ImageChops
 
 
 def augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=1):
@@ -34,7 +35,12 @@ def augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=1):
         print("bg_path:", bg_path)
         print(W, H)
         for k in range(repeat_times):
-            bg = bg_image.copy()
+            #bg = bg_image.copy()
+            max_offset = 100
+            x_offset = random.randint(-max_offset, max_offset)
+            y_offset = random.randint(-max_offset, max_offset)
+            bg = ImageChops.offset(bg_image.copy(), x_offset, y_offset)
+            print("offset x={}, y={}".format(x_offset, y_offset))
             
             # Find a crop image that has a compatible size
             compatible = False
@@ -51,6 +57,9 @@ def augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=1):
 
             x0 = random.randint(0, W - resized_w)
             y0 = random.randint(0, H - resized_h)
+            #x0 = random.randint(max(0, x_offset), W - resized_w + min(0, x_offset) )
+            #y0 = random.randint(max(0, y_offset), H - resized_h + min(0, y_offset) )
+            print("x0={}, y0={}".format(x0, y0))
             xc = x0 + resized_w // 2
             yc = y0 + resized_h // 2
             bg.paste(aug_crop_im, (x0, y0))
@@ -98,6 +107,6 @@ if __name__ == "__main__":
     im_outdir = os.path.join(data_path, out_dir, "train")
     json_outdir = os.path.join(data_path, out_dir, "json_annotations/train")
 
-    augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=3)
+    augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=10)
 
 
