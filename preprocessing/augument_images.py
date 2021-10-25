@@ -81,6 +81,7 @@ if __name__ == "__main__":
 
     in_dir = "8_ADS_obj_det_small"
     out_dir = "9_ADS_obj_get_generated"
+    
     os.system("rm -rf {}".format(os.path.join(data_path, out_dir)))
     os.system("mkdir -p {}".format(os.path.join(data_path, out_dir)))
     os.system("mkdir -p {}".format(os.path.join(data_path, out_dir, "json_annotations")))

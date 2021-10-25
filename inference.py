@@ -148,12 +148,12 @@ def draw_bbox(img, bbox):
     return img
 
 
-def draw_grid(img, output):
+def draw_grid(img, output, y_grid):
+    S = y_grid
     k = np.argmax(output) # class
     W, H = img.size
     x0 = 5
     x1 = W - 5
-    S = 20
     y0 = int(k * H / S)
     y1 = int((k+1) * H / S)
     draw = ImageDraw.Draw(img)
@@ -213,7 +213,7 @@ def process_dir(in_dir, out_dir, model_name="custom"):
         img2 = img.resize(displayed_size)
         #bbox = output[0], output[1], 0.1, 0.1
         #draw_bbox(img2, bbox=output)
-        draw_grid(img2, output)
+        draw_grid(img2, output, y_grid=30)
 
         #img2.show()
         out_path = os.path.join(out_dir, basename)
