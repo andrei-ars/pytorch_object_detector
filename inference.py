@@ -230,7 +230,9 @@ def process_dir(in_dir, out_dir, model_name="custom"):
     #    num_colors = 1
     #    image_width = 128
 
-    for img_path in glob.glob(os.path.join(in_dir, "*.png")):
+    t1 = time.time()
+
+    for i, img_path in enumerate(glob.glob(os.path.join(in_dir, "*.png"))):
         
         basename = os.path.basename(img_path)
         im_out_path = os.path.join(out_dir, basename)
@@ -264,6 +266,9 @@ def process_dir(in_dir, out_dir, model_name="custom"):
         if do_ocr:
             with open(text_out_path, "wt") as fp:
                 fp.write("confidence={:4f};\n\n{}\n".format(result['confidence'], result['text']))
+
+    t2 = time.time()
+    print("Processed {} images in {:.4f} sec.".format(i+1, t2-t1))
 
 if __name__ == "__main__":
 
