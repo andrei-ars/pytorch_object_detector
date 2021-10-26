@@ -216,7 +216,8 @@ def extract_crop_and_text(img, nn_output, do_ocr=True, y_grid=30):
     if do_ocr:
         import pytesseract
         custom_config = "--oem 3 --psm 6"
-        text = pytesseract.image_to_string(crop_img, lang='eng', config=custom_config)
+        #text = pytesseract.image_to_string(crop_img, lang='eng', config=custom_config)
+        text = pytesseract.image_to_string(img, lang='eng', config=custom_config)
 
     return {'image':img, 'crop': crop_img, "text": text, "confidence": confidence}
 

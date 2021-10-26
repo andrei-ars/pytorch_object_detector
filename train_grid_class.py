@@ -130,6 +130,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         # Each epoch has a training and validation phase
         for phase in data_parts:
             if phase == 'train':
+                ln_rate = scheduler.get_last_lr()
+                history[epoch]['ln_rate'] = ln_rate
+                print("ln_rate: {}".format(ln_rate))
                 scheduler.step()
                 model.train()  # Set model to training mode
             else:
@@ -192,10 +195,10 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                 print('{} loss: {:.4f}'.format(phase, epoch_loss))
                 history[epoch][phase] = {'loss': epoch_loss}
                 
-            if phase == 'valid':
-                ln_rate = scheduler.get_last_lr()
-                history[epoch]['ln_rate'] = ln_rate
-                print("ln_rate: {}".format(ln_rate))
+            #if phase == 'valid':
+            #    ln_rate = scheduler.get_last_lr()
+            #    history[epoch]['ln_rate'] = ln_rate
+            #    print("ln_rate: {}".format(ln_rate))
 
             # deep copy the model
             #if phase == 'valid' and epoch_acc > best_acc:
