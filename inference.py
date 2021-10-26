@@ -231,6 +231,8 @@ def process_dir(in_dir, out_dir, model_name="custom"):
     #    num_colors = 1
     #    image_width = 128
 
+    os.system("mkdir -p {}".format(out_dir))
+
     t1 = time.time()
 
     for i, img_path in enumerate(glob.glob(os.path.join(in_dir, "*.png"))):
@@ -275,7 +277,7 @@ if __name__ == "__main__":
 
     model_name = settings.model_name
     #process_dir(in_dir="../test/in/", out_dir="../test/out/")
-    process_dir(in_dir="../test/valid_in/", out_dir="../test/valid_out/")
+    process_dir(in_dir="../test/valid_in/", out_dir="../test/valid_out_2/")
     
     
     #process_dir(
