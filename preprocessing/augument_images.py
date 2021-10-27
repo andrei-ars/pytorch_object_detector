@@ -102,11 +102,11 @@ if __name__ == "__main__":
         os.system(cmd)
         print(cmd)
 
-    bg_indir = os.path.join(data_path, "4_ADS_marked_by_me/train/0_no_info")
+    bg_indir = os.path.join(data_path, "4_ADS_classification_marked_by_me/train/0_no_info")
     im_indir = os.path.join(data_path, "8_ADS_obj_det_small/crop_bbox/train")
     im_outdir = os.path.join(data_path, out_dir, "train")
     json_outdir = os.path.join(data_path, out_dir, "json_annotations/train")
 
-    augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=10)
+    augument_images(im_indir, bg_indir, im_outdir, json_outdir, repeat_times=5)
 
 

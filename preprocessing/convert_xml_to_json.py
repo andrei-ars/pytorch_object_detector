@@ -144,9 +144,10 @@ def convert_xml_to_ann(in_dir, out_dir, yolo_out_dir=None, crop_out_dir=None, mo
                     out_path = os.path.join(crop_out_dir, out_filename)
                     crop.save(out_path)
 
-    print(images_list)
-    list_filename = os.path.join(darknet_data_path, mode, "list.txt")
-    save_images_list(images_list, list_filename)
+    if yolo_out_dir:
+        print(images_list)
+        list_filename = os.path.join(darknet_data_path, mode, "list.txt")
+        save_images_list(images_list, list_filename)
 
 
 if __name__ == "__main__":
@@ -162,11 +163,11 @@ if __name__ == "__main__":
     json_subdir = "json_annotations"
     yolo_subdir = "annotations_yolo"
     crop_subdir = "crop_bbox"
-    for mode in ["train", "valid"]:
+    for mode in ["train", "valid", "train2"]:
         convert_xml_to_ann(
             in_dir=os.path.join(dataset_path, xml_subdir, mode),
             out_dir=os.path.join(dataset_path, json_subdir, mode),
-            yolo_out_dir=os.path.join(dataset_path, yolo_subdir, mode),
+            #yolo_out_dir=os.path.join(dataset_path, yolo_subdir, mode),
             crop_out_dir=os.path.join(dataset_path, crop_subdir, mode),
             mode=mode,
             )
