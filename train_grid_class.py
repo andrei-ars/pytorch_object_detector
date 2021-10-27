@@ -51,7 +51,7 @@ pickle_dataset_path = "dataset_{}_{}_{}.pickle".format(image_width, dataset_type
 #num_epochs = 25; start_lr = 0.00256; step_size = 4
 #num_epochs = 25; start_lr = 0.00128; step_size = 5
 #num_epochs = 15; start_lr = 0.00512; step_size = 4 # for resnet
-num_epochs = 10; start_lr = 0.00512; step_size = 3
+num_epochs = 6; start_lr = 0.00512; step_size = 3
 
 
 if os.path.exists(pickle_dataset_path):
@@ -268,3 +268,20 @@ if __name__ == "__main__":
     torch.save(model.state_dict(), "model_state.pt")
     torch.save(model, "model_full.pt", _use_new_zipfile_serialization=False)
 
+"""
+Mobile-net-v2
+
+Ep: lrate | TrainLoss ValLoss | TrainAcc ValAcc
+00: [0.00512] | 2.6203 0.8073 | 0.235 0.739
+01: [0.00512] | 0.4938 0.2551 | 0.829 0.935
+02: [0.00512] | 0.2011 0.2305 | 0.927 0.902
+03: [0.00256] | 0.1452 0.2225 | 0.948 0.924
+04: [0.00256] | 0.1099 0.1071 | 0.961 0.946
+05: [0.00256] | 0.0528 0.1564 | 0.987 0.946
+06: [0.00128] | 0.0426 0.1195 | 0.988 0.946
+07: [0.00128] | 0.0348 0.1045 | 0.991 0.946
+08: [0.00128] | 0.0223 0.2066 | 0.997 0.935
+09: [0.00064] | 0.0250 0.1854 | 0.996 0.935
+
+
+"""
