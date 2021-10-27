@@ -50,9 +50,8 @@ pickle_dataset_path = "dataset_{}_{}_{}.pickle".format(image_width, dataset_type
 #num_epochs = 150; start_lr = 0.00256; step_size = 20
 #num_epochs = 25; start_lr = 0.00256; step_size = 4
 #num_epochs = 25; start_lr = 0.00128; step_size = 5
-num_epochs = 15; start_lr = 0.00512; step_size = 4
-#num_epochs = 5; start_lr = 0.00512; step_size = 2
-
+#num_epochs = 15; start_lr = 0.00512; step_size = 4 # for resnet
+num_epochs = 10; start_lr = 0.00512; step_size = 3
 
 
 if os.path.exists(pickle_dataset_path):
@@ -130,9 +129,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         # Each epoch has a training and validation phase
         for phase in data_parts:
             if phase == 'train':
-                ln_rate = scheduler.get_last_lr()
-                history[epoch]['ln_rate'] = ln_rate
-                print("ln_rate: {}".format(ln_rate))
+                lrate = scheduler.get_last_lr()
+                history[epoch]['lrate'] = lrate
+                print("lrate: {}".format(lrate))
                 scheduler.step()
                 model.train()  # Set model to training mode
             else:
@@ -196,9 +195,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                 history[epoch][phase] = {'loss': epoch_loss}
                 
             #if phase == 'valid':
-            #    ln_rate = scheduler.get_last_lr()
-            #    history[epoch]['ln_rate'] = ln_rate
-            #    print("ln_rate: {}".format(ln_rate))
+            #    lrate = scheduler.get_last_lr()
+            #    history[epoch]['lrate'] = lrate
+            #    print("lrate: {}".format(lrate))
 
             # deep copy the model
             #if phase == 'valid' and epoch_acc > best_acc:
@@ -215,21 +214,21 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     #model.load_state_dict(best_model_wts)
 
     if dataset_type == "grid_class":
-        print("\nEp: l_rate | TrainLoss ValLoss | TrainAcc ValAcc")
+        print("\nEp: lrate | TrainLoss ValLoss | TrainAcc ValAcc")
         for epoch in range(num_epochs):
-            ln_rate = history[epoch]['ln_rate']
+            lrate = history[epoch]['lrate']
             train_loss = history[epoch]['train']['loss']
             valid_loss = history[epoch]['valid']['loss']
             train_acc = history[epoch]['train']['acc']
             valid_acc = history[epoch]['valid']['acc']
-            print('{:02d}: {} | {:.4f} {:.4f} | {:.3f} {:.3f}'.format(epoch, ln_rate, train_loss, valid_loss, train_acc, valid_acc))
+            print('{:02d}: {} | {:.4f} {:.4f} | {:.3f} {:.3f}'.format(epoch, lrate, train_loss, valid_loss, train_acc, valid_acc))
     else:
-        print("\nEpoch l_rate train valid")
+        print("\nEpoch lrate train valid")
         for epoch in range(num_epochs):
-            ln_rate = history[epoch]['ln_rate']
+            lrate = history[epoch]['lrate']
             train_loss = history[epoch]['train']['loss']
             valid_loss = history[epoch]['valid']['loss']
-            print('{:02d}: {} | {:.4f} {:.4f}'.format(epoch, ln_rate, train_loss, valid_loss))
+            print('{:02d}: {} | {:.4f} {:.4f}'.format(epoch, lrate, train_loss, valid_loss))
 
     return model
 
@@ -246,8 +245,8 @@ if __name__ == "__main__":
         raise Exception("Bad dataset_type")
 
     if model_name == "resnet":
-        model = get_resnet18_classifier(output_size=output_size, pretrained=False)
-        #model = get_torchvision_model(output_size=output_size, pretrained=True)
+        #model = get_resnet18_classifier(output_size=output_size, pretrained=False)
+        model = get_torchvision_model(output_size=output_size, pretrained=True)
     elif model_name == "custom":
         model = CNN_Net(output_size=output_size, num_input_channels=1)
 
@@ -269,128 +268,3 @@ if __name__ == "__main__":
     torch.save(model.state_dict(), "model_state.pt")
     torch.save(model, "model_full.pt", _use_new_zipfile_serialization=False)
 
-
-# Results:
-
-# 19: 0.0474 0.0354
-
-# resnet18:
-# 18: 0.0098 0.0477
-# 19: 0.0099 0.0474
-# --
-# 19: 0.0097 0.0491
-
-# custom:
-#2: 0.0143 0.0057
-#3: 0.0131 0.0053
-
-"""
-
-
-18: 0.0335 0.1952
-19: 0.0407 0.1900
-
-Epoch Train Valid
-0: 0.1269 0.1348
-1: 0.0517 0.0342
-2: 0.0310 0.0498
-3: 0.0301 0.0281
-4: 0.0198 0.0147
-
-
-lr=0.003
-Epoch Train Valid
-0: 0.0974 0.0842
-1: 0.0533 0.0288
-2: 0.0357 0.0469
-3: 0.0199 0.0417
-4: 0.0156 0.0213
-5: 0.0128 0.0191
-6: 0.0076 0.0111
-7: 0.0069 0.0120
-
-
-Epoch Train Valid
-0: 0.1968 0.0760
-1: 0.0462 0.0407
-2: 0.0369 0.1018
-3: 0.0233 0.0427
-4: 0.0203 0.0203
-5: 0.0125 0.0291
-6: 0.0076 0.0107
-7: 0.0055 0.0109
-
-
-Epoch Train Valid
-0: 0.0711 0.0152
-1: 0.0160 0.0091
-2: 0.0080 0.0089
-3: 0.0068 0.0090
-4: 0.0062 0.0095
-5: 0.0059 0.0095
-6: 0.0061 0.0087
-7: 0.0059 0.0088
-
-Epoch Train Valid
-0: 0.0504 0.0171
-1: 0.0145 0.0203
-2: 0.0079 0.0088
-
-
-Epoch Train Valid
-0: 0.0401 0.0170
-1: 0.0185 0.0108
-2: 0.0084 0.0070
-3: 0.0077 0.0076
-4: 0.0076 0.0072
-
-
-Mobile
-Epoch Train Valid
-17: 0.0403 0.0198
-18: 0.0431 0.0197
-19: 0.0366 0.0196
-
-17: 0.0149 0.0039
-18: 0.0153 0.0041
-19: 0.0157 0.0041
-
-
-==============
-
-new data
-
-Epoch Train Valid
-0: 0.2733 0.1828
-1: 0.1991 0.3840
-2: 0.1533 0.0404
-18: 0.0362 0.0189
-19: 0.0342 0.0175
-
-0: 1.3119 0.1615
-1: 0.4458 0.5909
-18: 0.0647 0.0036
-19: 0.0645 0.0036
-
-----------
-with augmentation:
-custom:
-Epoch 9/9
-----------
-train loss: 0.0398
-valid loss: 0.0352
-ln_rate: [0.0001]
-
-mobile:
-
-Training complete in 32m 37s
-
-Epoch Train Valid
-0: 0.1080 0.0357
-1: 0.0334 0.0179
-2: 0.0262 0.0238
-3: 0.0174 0.0098
-4: 0.0168 0.0094
-
-
-"""
