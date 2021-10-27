@@ -50,7 +50,7 @@ pickle_dataset_path = "dataset_{}_{}_{}.pickle".format(image_width, dataset_type
 #num_epochs = 150; start_lr = 0.00256; step_size = 20
 #num_epochs = 25; start_lr = 0.00256; step_size = 4
 #num_epochs = 25; start_lr = 0.00128; step_size = 5
-num_epochs = 12; start_lr = 0.00512; step_size = 4
+num_epochs = 15; start_lr = 0.00512; step_size = 4
 #num_epochs = 5; start_lr = 0.00512; step_size = 2
 
 
@@ -215,7 +215,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     #model.load_state_dict(best_model_wts)
 
     if dataset_type == "grid_class":
-        print("\nEp: ln_rate | TrainLoss ValLoss | TrainAcc ValAcc")
+        print("\nEp: l_rate | TrainLoss ValLoss | TrainAcc ValAcc")
         for epoch in range(num_epochs):
             ln_rate = history[epoch]['ln_rate']
             train_loss = history[epoch]['train']['loss']
@@ -224,7 +224,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             valid_acc = history[epoch]['valid']['acc']
             print('{:02d}: {} | {:.4f} {:.4f} | {:.3f} {:.3f}'.format(epoch, ln_rate, train_loss, valid_loss, train_acc, valid_acc))
     else:
-        print("\nEpoch ln_rate train valid")
+        print("\nEpoch l_rate train valid")
         for epoch in range(num_epochs):
             ln_rate = history[epoch]['ln_rate']
             train_loss = history[epoch]['train']['loss']
